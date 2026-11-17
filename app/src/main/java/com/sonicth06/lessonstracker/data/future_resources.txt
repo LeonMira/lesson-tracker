@@ -1,0 +1,14 @@
+=== Session Data Class template ===
+
+package com.sonicth06.lessonstracker.data
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "sessions")
+data class Session(
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+    val subjectId: Int = 0,
+    val date:
+)
