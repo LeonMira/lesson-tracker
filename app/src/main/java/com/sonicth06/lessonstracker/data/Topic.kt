@@ -26,4 +26,5 @@ data class Topic(
     //val sessionId: Int? = null,
     val name: String,
     val description: String = "",
+    val covered: Boolean = false,
 )
