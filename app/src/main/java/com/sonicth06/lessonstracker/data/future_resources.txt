@@ -12,3 +12,4 @@ data class Session(
     val subjectId: Int = 0,
     val date:
 )
+
