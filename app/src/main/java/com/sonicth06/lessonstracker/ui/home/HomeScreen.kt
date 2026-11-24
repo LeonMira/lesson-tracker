@@ -15,39 +15,30 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sonicth06.lessonstracker.data.Topic
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
-    val topics = remember {
-        mutableStateListOf(
-            Topic(id = 1, subjectId = 1, name = "Variables"),
-            Topic(id = 2, subjectId = 1, name = "Condicionales"),
-        )
-    }
+fun HomeScreen(
+    modifier: Modifier = Modifier,
+    homeViewModel: HomeViewModel = viewModel()
+) {
+    val homeUiState by homeViewModel.uiState.collectAsState()
 
     LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(topics, key = { it.id }) { topic ->
+        items(homeUiState.topicList, key = { it.id }) { topic ->
             TopicItem(
                 topic = topic,
                 onCheckedChange = { new ->
-                    val position = topics.indexOfFirst { it.id == topic.id }
-                    //Browses on the list for an item which fulfills the condition of the keys,
-                    //which is the item which has the same id of the topic on this row
-                    val copy = topic.copy(covered = new)
-                    //It creates a copy of the item returned by the previous line, and assigns the
-                    //boolean value contained in the checkbox to the `covered` property of that copy.
-                    topics[position] = copy
-                    //changes the old version of the topic for the copy, with the data of the checkbox
-                    //updated
-                    //compacted version:
-                    //topics[topics.indexOfFirst { it.id == topic.id }] = topic.copy(covered = new)
+                    homeViewModel.onCoveredChange(topic, new)
                 },
                 enabled = true
             )
