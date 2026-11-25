@@ -1,15 +1,11 @@
-package com.sonicth06.lessonstracker.ui.home
+package com.sonicth06.lessonstracker.ui.topics
 
-import android.R.attr.enabled
-import android.widget.CheckBox
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.lazy.items
@@ -25,7 +21,7 @@ import com.sonicth06.lessonstracker.data.Topic
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    homeViewModel: HomeViewModel = viewModel()
+    homeViewModel: TopicsViewModel = viewModel()
 ) {
     val homeUiState by homeViewModel.uiState.collectAsState()
 

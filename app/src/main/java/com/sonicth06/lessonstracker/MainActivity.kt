@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import com.sonicth06.lessonstracker.ui.home.HomeScreen
+import com.sonicth06.lessonstracker.ui.topics.HomeScreen
 import com.sonicth06.lessonstracker.ui.theme.LessonsTrackerTheme
 
 class MainActivity : ComponentActivity() {
