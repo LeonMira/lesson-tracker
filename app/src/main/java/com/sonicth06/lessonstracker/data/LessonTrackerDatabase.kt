@@ -6,7 +6,9 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 @Database(
-    entities = [Subject::class, Topic::class], version = 1, exportSchema = false
+    entities = [Subject::class, Topic::class],
+    version = 2,
+    exportSchema = false,
 )
 abstract class LessonTrackerDatabase : RoomDatabase() {
     abstract fun subjectDao(): SubjectDao
@@ -16,12 +18,14 @@ abstract class LessonTrackerDatabase : RoomDatabase() {
         @Volatile
         private var Instance: LessonTrackerDatabase? = null
 
-        fun getDataBase(context: Context): LessonTrackerDatabase {
+        fun getDatabase(context: Context): LessonTrackerDatabase {
             return Instance ?: synchronized(this) {
                 Room.databaseBuilder(
                     context,
                     LessonTrackerDatabase::class.java,
-                    "lesson_tracker_database")
+                    "lesson_tracker_database",
+                )
+                    .fallbackToDestructiveMigration(dropAllTables = true)
                     .build()
                     .also { Instance = it }
             }

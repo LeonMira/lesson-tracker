@@ -7,9 +7,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.sonicth06.lessonstracker.ui.topics.HomeScreen
+import androidx.navigation.compose.rememberNavController
+import com.sonicth06.lessonstracker.ui.navigation.LessonTrackerNavHost
 import com.sonicth06.lessonstracker.ui.theme.LessonsTrackerTheme
+import com.sonicth06.lessonstracker.ui.topics.TopicScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,8 +20,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             LessonsTrackerTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    HomeScreen(modifier = Modifier.padding(innerPadding))
+                Surface(modifier = Modifier.fillMaxSize()) {
+                    LessonTrackerNavHost(navController = rememberNavController())
                 }
             }
         }

@@ -1,33 +1,86 @@
 package com.sonicth06.lessonstracker.ui.topics
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.sonicth06.lessonstracker.data.LessonTrackerRepository
 import com.sonicth06.lessonstracker.data.Topic
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
-class TopicsViewModel : ViewModel() {
+class TopicsViewModel(
+    savedStateHandle: SavedStateHandle,
+    private val repository: LessonTrackerRepository
+) : ViewModel() {
 
-    //MutableStateFlow is the observable container holding the state and telling the display
-    //when it changes. Acts as an intermediary between ViewModel and the UI
-    private val _uiState = MutableStateFlow(TopicsUiState(
-        topicList = listOf(
-            Topic(id = 1, subjectId = 1, name = "Variables"),
-            Topic(id = 2, subjectId = 1, name = "Condicionales"),
-        )
-        //MutableStateFlow is the observable container holding the state and telling the display
-        //when it changes. Acts as an intermediary between ViewModel and the UI
-    ))
-    val uiState: StateFlow<TopicsUiState> = _uiState.asStateFlow()
+    private val subjectId: Int = checkNotNull(savedStateHandle[TopicsDestination.subjectIdArg])
 
-    fun onCoveredChange(topic: Topic, covered: Boolean) {
-        _uiState.update { currentState ->
-            currentState.copy(
-                topicList = currentState.topicList.map { item ->
-                    if (item.id == topic.id) item.copy(covered = covered) else item
-                }
+    val uiState: StateFlow<TopicsUiState> =
+        repository.getTopicsBySubjectStream(subjectId)
+            .map { TopicsUiState(topicList = it) }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
+                initialValue = TopicsUiState()
             )
+
+    var entryUiState by mutableStateOf(TopicEntryUiState())
+        private set
+
+    fun updateEntryName(newName: String) {
+        entryUiState = entryUiState.copy(
+            name = newName,
+            isValid = newName.isNotBlank()
+        )
+    }
+
+    fun updateEntryDescription(newDescription: String) {
+        entryUiState = entryUiState.copy(
+            description = newDescription
+        )
+    }
+
+    suspend fun saveTopic() {
+        if (!entryUiState.isValid) return
+        repository.insertTopic(entryUiState.toTopic(subjectId))
+        entryUiState = TopicEntryUiState()
+    }
+
+    fun deleteTopic(topic: Topic) {
+        viewModelScope.launch {
+            repository.deleteTopic(topic)
         }
     }
+
+    fun onCoveredChange(topic: Topic, covered: Boolean) {
+        viewModelScope.launch {
+            repository.updateTopic(topic.copy(covered = covered))
+        }
+    }
+
+    companion object {
+        private const val TIMEOUT_MILLIS = 5_000L
+    }
 }
+
+data class TopicUiState(
+    val topicList: List<Topic> = emptyList()
+)
+
+data class TopicEntryUiState(
+    val name: String = "",
+    val description: String = "",
+    val isValid: Boolean = false
+)
+
+fun TopicEntryUiState.toTopic(subjectId: Int): Topic = Topic(
+    name = name.trim(),
+    description = description.trim(),
+    subjectId = subjectId
+)

@@ -9,5 +9,5 @@ data class Subject(
     val id: Int = 0,
     val name: String,
     val description: String = "",
-    val estimatedSessions: Int,
+    //val estimatedSessions: Int,
 )

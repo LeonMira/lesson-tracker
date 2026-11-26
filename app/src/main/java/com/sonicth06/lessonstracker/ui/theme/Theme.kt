@@ -1,6 +1,5 @@
 package com.sonicth06.lessonstracker.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -11,33 +10,55 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+private val LightColorScheme = lightColorScheme(
+    primary = IndigoPrimaryLight,
+    onPrimary = OnIndigoPrimaryLight,
+    primaryContainer = IndigoContainerLight,
+    onPrimaryContainer = OnIndigoContainerLight,
+    secondary = TealSecondaryLight,
+    onSecondary = OnTealSecondaryLight,
+    secondaryContainer = TealContainerLight,
+    onSecondaryContainer = OnTealContainerLight,
+    tertiary = AmberTertiaryLight,
+    onTertiary = OnAmberTertiaryLight,
+    tertiaryContainer = AmberContainerLight,
+    onTertiaryContainer = OnAmberContainerLight,
+    background = BackgroundLight,
+    onBackground = OnSurfaceLight,
+    surface = SurfaceLight,
+    onSurface = OnSurfaceLight,
+    surfaceVariant = SurfaceVariantLight,
+    onSurfaceVariant = OnSurfaceVariantLight,
+    outlineVariant = OutlineVariantLight
 )
 
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+private val DarkColorScheme = darkColorScheme(
+    primary = IndigoPrimaryDark,
+    onPrimary = OnIndigoPrimaryDark,
+    primaryContainer = IndigoContainerDark,
+    onPrimaryContainer = OnIndigoContainerDark,
+    secondary = TealSecondaryDark,
+    onSecondary = OnTealSecondaryDark,
+    secondaryContainer = TealContainerDark,
+    onSecondaryContainer = OnTealContainerDark,
+    tertiary = AmberTertiaryDark,
+    onTertiary = OnAmberTertiaryDark,
+    tertiaryContainer = AmberContainerDark,
+    onTertiaryContainer = OnAmberContainerDark,
+    background = BackgroundDark,
+    onBackground = OnSurfaceDark,
+    surface = SurfaceDark,
+    onSurface = OnSurfaceDark,
+    surfaceVariant = SurfaceVariantDark,
+    onSurfaceVariant = OnSurfaceVariantDark,
+    outlineVariant = OutlineVariantDark
 )
 
 @Composable
 fun LessonsTrackerTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    // Ponlo en false si quieres forzar siempre la paleta de marca de LessonsTracker
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -45,7 +66,6 @@ fun LessonsTrackerTheme(
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
-
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
